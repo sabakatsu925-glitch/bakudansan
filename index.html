@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>爆弾さん</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- タイトル画面 -->
+    <div id="title-screen" class="screen active">
+        <div class="title-container">
+            <h1 class="game-title">💣 爆弾さん 💣</h1>
+            <p class="subtitle">ボンバーマン風 4人対戦</p>
+            <div class="menu-buttons">
+                <button id="btn-solo" class="btn btn-primary">ひとりで遊ぶ</button>
+                <button id="btn-create-room" class="btn btn-secondary">ルームを作成</button>
+                <button id="btn-join-room" class="btn btn-secondary">ルームに参加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ひとりで遊ぶ画面 -->
+    <div id="solo-screen" class="screen">
+        <div class="panel">
+            <h2>ひとりで遊ぶ</h2>
+            <div class="form-group">
+                <label>P2（CPU）難易度</label>
+                <select id="solo-cpu1">
+                    <option value="weak">弱い</option>
+                    <option value="normal" selected>普通</option>
+                    <option value="strong">強い</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>P3（CPU）難易度</label>
+                <select id="solo-cpu2">
+                    <option value="weak">弱い</option>
+                    <option value="normal" selected>普通</option>
+                    <option value="strong">強い</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>P4（CPU）難易度</label>
+                <select id="solo-cpu3">
+                    <option value="weak">弱い</option>
+                    <option value="normal" selected>普通</option>
+                    <option value="strong">強い</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>制限時間</label>
+                <select id="solo-time">
+                    <option value="120">2分</option>
+                    <option value="150" selected>2分30秒</option>
+                    <option value="180">3分</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="btn-do-solo" class="btn btn-primary">ゲーム開始</button>
+                <button id="btn-back-solo" class="btn btn-back">戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ルーム作成画面 -->
+    <div id="create-screen" class="screen">
+        <div class="panel">
+            <h2>ルーム作成</h2>
+            <div class="form-group">
+                <label>合言葉（4桁の番号）</label>
+                <input type="tel" id="create-password" placeholder="例: 1234" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" style="text-align:center; font-size:1.5em; letter-spacing:0.3em;">
+            </div>
+            <div class="form-group">
+                <label>CPU1 難易度</label>
+                <select id="cpu1-difficulty">
+                    <option value="weak">弱い</option>
+                    <option value="normal" selected>普通</option>
+                    <option value="strong">強い</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>CPU2 難易度</label>
+                <select id="cpu2-difficulty">
+                    <option value="weak">弱い</option>
+                    <option value="normal" selected>普通</option>
+                    <option value="strong">強い</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>制限時間</label>
+                <select id="time-limit">
+                    <option value="120">2分</option>
+                    <option value="150" selected>2分30秒</option>
+                    <option value="180">3分</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button id="btn-do-create" class="btn btn-primary">作成して待機</button>
+                <button id="btn-back-create" class="btn btn-back">戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ルーム参加画面 -->
+    <div id="join-screen" class="screen">
+        <div class="panel">
+            <h2>ルームに参加</h2>
+            <div class="form-group">
+                <label>合言葉（4桁の番号）</label>
+                <input type="tel" id="join-password" placeholder="例: 1234" maxlength="4" pattern="[0-9]{4}" inputmode="numeric" style="text-align:center; font-size:1.5em; letter-spacing:0.3em;">
+            </div>
+            <div class="btn-group">
+                <button id="btn-do-join" class="btn btn-primary">参加</button>
+                <button id="btn-back-join" class="btn btn-back">戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 待機画面 -->
+    <div id="waiting-screen" class="screen">
+        <div class="panel">
+            <h2>待機中...</h2>
+            <p id="waiting-message">もう1人のプレイヤーを待っています</p>
+            <div class="loader"></div>
+            <p id="room-info"></p>
+            <button id="btn-start-game" class="btn btn-primary" style="display:none;">ゲーム開始！</button>
+            <button id="btn-back-waiting" class="btn btn-back">キャンセル</button>
+        </div>
+    </div>
+
+    <!-- ゲーム画面 -->
+    <div id="game-screen" class="screen">
+        <div id="game-hud">
+            <div id="timer-display">2:30</div>
+            <div id="score-display">
+                <span id="p1-score" class="score-item">P1: 0</span>
+                <span id="p2-score" class="score-item">P2: 0</span>
+                <span id="p3-score" class="score-item">P3: 0</span>
+                <span id="p4-score" class="score-item">P4: 0</span>
+            </div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+        <div id="controls">
+            <div id="joystick-zone"></div>
+            <div id="action-buttons">
+                <button id="btn-kick" class="action-btn" style="display:none;">👟</button>
+                <button id="btn-bomb" class="action-btn">💣</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- リザルト画面 -->
+    <div id="result-screen" class="screen">
+        <div class="panel">
+            <h2 id="result-title">ラウンド結果</h2>
+            <div id="result-content"></div>
+            <div id="result-scores"></div>
+            <div class="btn-group">
+                <button id="btn-next-round" class="btn btn-primary" style="display:none;">次のラウンドへ</button>
+                <button id="btn-back-title" class="btn btn-secondary">タイトルへ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/constants.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/bomb.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/cpu.js"></script>
+    <script src="js/misobon.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
